@@ -1,0 +1,40 @@
+{{ include("header.twig") }}
+
+<div id="main">
+    <noscript>This site just doesn't work, period, without JavaScript</noscript>
+<ul id="list" class="ui-sortable">
+    {% for todo in todos %}
+  <li data-post-id="{{todo.id}}"  color="{{todo.id}}" class="colorBlue" rel="1" id="{{todo.id}}">
+  
+    <input type="text" id="color{{todo.id}}" class="span" onclick="changeColor()" style="background-color: {{todo.color}}" value="{{todo.name}}" onBlur="updateValue(this,'name','{{todo.id}}')">
+
+    <div id="post{{todo.id}}" class='draggertab tab handle'></div>
+      <div class="colortab tab">
+        <input type="color" class="bg"  data-id="{{todo.id}}">
+      </div>
+
+        <div class='deletetab tab'>
+          <a id="BtnDelete{{todo.id}}" style="border-bottom: none;" onclick="TestingFunc('{{ todo.id }}','1','0')">
+            <img src="../images/final.png" alt=""><p></p>
+          </a>
+
+            <a href="/delete/{{ todo.id }}" class="ShowHide{{todo.id}}" id="BtnSure{{todo.id}}" 
+              style="display: none;border-bottom: none;float:left">
+              <img src="../images/d.png" alt="">
+            </a>
+
+          <button type="button" class="ShowHide{{todo.id}}" id="BtnCancel{{todo.id}}" style="display: none;" 
+            onclick="TestingFunc('{{todo.id}}','2','0')">
+            Cancel
+          </button>
+        </div>
+
+            <div class="donetab tab" id="striker{{todo.id}}" onclick="LineFunc('{{todo.id}}')"></div>
+          </li>
+
+          {% endfor %}
+      
+    </ul>
+    <br />
+       
+    {{ include("footer.twig")}}

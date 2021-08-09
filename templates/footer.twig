@@ -1,0 +1,132 @@
+<form action="/add" id="add-new" method="post">
+	<input type="text" id="new-list-item-text" name="name" required="" />
+	<input type="submit" id="add-new-submit" value="Add" class="button" />
+</form>
+
+<div class="clear"></div>
+</div>
+</div>
+
+<!-- JQUERY -->      
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+
+
+<script>
+//FOR DELETE BUTTON
+
+function TestingFunc(Row,Condition,Delete)
+{  
+	if(Condition == 1)
+	{
+		$('#BtnDelete'+Row).css('display','none');
+		$('.ShowHide'+Row).css('display','block');  
+		if(Delete == 1)
+		{
+		}
+	}
+	else
+	{
+		$('#BtnDelete'+Row).css('display','block');
+		$('.ShowHide'+Row).css('display','none');  
+	}
+};
+
+//FOR INLINE UPDATE
+
+function updateValue(element, column, id) {
+	var value = element.value;
+	$(element).attr('class', 'process')
+	$.ajax({
+		url: "/Inline",
+		dataType: "json",
+		method: "POST",
+		data: {
+			value: value,
+			column: column,
+			id: id
+		},
+		success: function (php_result) {
+			console.log(php_result);
+		}
+	});
+};
+// DONE TAB
+function LineFunc(id)
+{  
+	console.log(document.getElementById(id));
+	console.log($(id).parent());
+	console.log($(id).parent().closest('li'));
+	console.log($(id).parent().closest('li').find('input.span'));
+	if($('#color'+id).hasClass('line-through')) {
+		$('#color'+id).removeClass('line-through');
+	} else {
+		$('#color'+id).addClass('line-through');
+	}
+
+};
+
+
+//FOR SORTABLE
+
+$( "#list" ).sortable({
+	handle: ".handle",
+	placeholder : "ui-state-highlight",
+	update  : function(event, ui)
+	{
+		var post_order_ids = [];
+		$('#list li').each(function(){
+			post_order_ids.push($(this).data("post-id"));
+		});
+		$.ajax({
+			url:"/update",
+			method:"POST",
+			dataType: "json",
+			data:{  post_order_ids },
+			success:function(data)
+			{
+				console.log('its');
+				if(data)
+				{
+					$(".alert-danger").hide();
+					$(".alert-success ").show();
+				}
+				else
+				{
+					$(".alert-success").hide();
+					$(".alert-danger").show();
+				}
+			}
+		});
+	}
+});
+
+// COLOR change
+$(".bg").change(function(){
+	var id = $(this).attr('data-id');
+	var color = $(this).val();
+	$("#color"+id).css("background-color", color);
+	$.ajax({
+		url:"/color",
+		dataType: "json",
+		method:"POST",
+		data:{id:id,color:color},
+		success:function(data)
+		{
+			if(data)
+			{
+				$(".alert-danger").hide();
+				$(".alert-success ").show();
+			}
+			else
+			{
+				$(".alert-success").hide();
+				$(".alert-danger").show();
+			}
+		}
+	});
+});
+
+</script>
+</body>
+</html>
